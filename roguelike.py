@@ -177,6 +177,11 @@ def gnome_on_board(player, gnome, board, original_board):
         engine.move_boss(gnome, gnome_direction, board, original_board)
         engine.put_boss_on_board(board, gnome)
 
+        if combat.is_boss_encounter(player, gnome):
+            all_hints = data_management.get_hint_from_file()
+            random_hint = random.choice(all_hints)
+            MESSAGE.append(f"Gnome says: Did you know that {random_hint}?")
+
 
 def get_gates(player, wizard, board, original_board, border_width=2):
     global GATES_CLOSED
