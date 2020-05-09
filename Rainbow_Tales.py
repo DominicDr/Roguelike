@@ -30,6 +30,7 @@ def run():
             util.clear_screen()
             if key == '1':
                 roguelike.main()
+                break
             elif key == '2':
                 story_line.display_story_line()
                 key = util.key_pressed()
