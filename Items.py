@@ -162,7 +162,15 @@ artifacts = {
     },
     }
 
-def add_items_to_inventory(item, inventory):
+def add_stats(item, player):
+    if 'strength' in item:
+        player['AD'] += item['strength']
+    elif 'durability' in item:
+        player['Armour'] += item['durability']
+
+
+
+def add_items_to_inventory(item, inventory, player):
     if type(item) is list:
         for element in item:
             if element in inventory:
@@ -172,12 +180,16 @@ def add_items_to_inventory(item, inventory):
                     element['amount'] += 1
             else:
                 inventory.append(element)
+                add_stats(element, player)
     else:
         if item in inventory:
             if item['amount'] == 0:
                 item['amount'] += 2
             else:
                 item['amount'] += 1
+        else:
+            inventory.append(item)
+            add_stats(item, player)
 
 
 def print_item(item, item_key):
@@ -225,9 +237,7 @@ def choose_item_to_eat(inventory, player):
             print('Wrong key!')
             continue
         
-            
-
-
+    
 def display_inventory(inventory):
     inside_line = '|' + '=' * 82 + '|'
     outside_line = '-' * 82
