@@ -311,10 +311,13 @@ def main():
             engine.move_player(player, 'right', board, original_board, MESSAGE)
         
         elif key == 'i':
-            Items.display_inventory(PLAYER_INVENTORY)
-            print('Press any key to continue')
+            # Items.display_inventory(PLAYER_INVENTORY)
+            print(PLAYER_INVENTORY)
+            print('If you want to eat something, press F. Otherwise press any other key.')
             key = util.key_pressed()
-            
+            if key == 'f':
+                Items.choose_item_to_eat(PLAYER_INVENTORY, player['Health'])
+                print(player_life)
         else:
             MESSAGE.append("Incorrect input!")
         util.clear_screen()

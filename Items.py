@@ -1,4 +1,7 @@
 from colorama import Fore, Back, Style 
+import time
+import util
+
 
 money = {
     'Silver Coin': {
@@ -184,7 +187,36 @@ def print_item(item, item_key):
     return item_to_print
 
 # def choosing_items(inventory):
-    
+
+
+def choose_item_to_eat(inventory, player):
+    choosing_food = True
+    while choosing_food:
+        print("Press F to choose a food to eat or press X to back")
+        key = util.key_pressed()
+        if key == 'x':
+            choosing_food = False
+        elif key == 'f':
+            chosen_food = input("Choose a food to eat\n")
+            for element in inventory:
+                if chosen_food == element['name']:
+                    life = element['health']
+                    element['amount'] -= 1
+                    if element['amount'] < 0:
+                        inventory.remove(element)
+                    print(f'You just ate {chosen_food}')
+                    time.sleep(3)
+                    choosing_food = False
+                else:
+                    continue
+            player['Health'] += life
+        else:
+            print('Wrong key!')
+            continue
+        
+            
+
+
 def display_inventory(inventory):
     inside_line = '|' + '=' * 82 + '|'
     outside_line = '-' * 82
@@ -199,8 +231,8 @@ def display_inventory(inventory):
                     print(print_item(items['strength'], "Strength points"))
                 elif 'durability' in items:
                     print(print_item(items['durability'], "Armor points"))
-                elif 'health' in items:
-                    print(print_item(items['health'], "Life points"))
+                # elif 'health' in items:
+                #     print(print_item(items['health'], "Life points"))
             else: 
                 if 'strength' in items:
                     print(print_item(items['strength'], "Strength points"))
@@ -208,7 +240,7 @@ def display_inventory(inventory):
                     print(print_item(items['durability'], "Armor points"))
                 elif 'health' in items:
                     print(print_item(items['health'], "Life points"))
-        else:
+        elif items != inventory[-1]:
             print(print_item(items['name'], "Name"))
             print(print_item(items['description'], "Description"))
             if items['amount'] > 0:
@@ -228,6 +260,8 @@ def display_inventory(inventory):
                     print(print_item(items['health'], "Life points"))
             print(inside_line)
     print(' ' + outside_line)
+
+
 
 
 def print_player_life(player_life):
