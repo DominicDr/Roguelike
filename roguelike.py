@@ -15,7 +15,7 @@ import mini_games
 import time
 import npc
 
-PLAYER_ICON = Fore.GREEN + Back.LIGHTBLUE_EX + '▣' + Style.RESET_ALL
+PLAYER_ICON = Fore.RED + Back.BLACK + '▣' + Style.RESET_ALL
 PLAYER_START_X = 3
 PLAYER_START_Y = 3
 
