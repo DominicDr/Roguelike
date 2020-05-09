@@ -346,8 +346,7 @@ def main():
         
         elif key == 'i':
             Items.display_inventory(PLAYER_INVENTORY)
-            print('Press any key to continue')
-            key = util.key_pressed()
+            Items.choose_item_to_eat(PLAYER_INVENTORY, player)
             
         else:
             MESSAGE.append("Incorrect input!")
