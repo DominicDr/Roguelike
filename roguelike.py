@@ -27,6 +27,7 @@ BOARD_COUNT = 1
 SPIDER_BOARD = random.randint(BOARD_COUNT + 1, LAST_BOARD-1)
 WIZARD_BOARD = BOARD_COUNT + 1
 GATES_CLOSED = True
+GNOME_TRIGGERED = False
 
 MESSAGE = []
 
@@ -56,27 +57,27 @@ def create_player():
     return player
 
 
-def get_new_board(board, original_board, player):
+def get_new_board(board, original_board, player, gnome):
     if BOARD_COUNT == LAST_BOARD:
-        get_last_board(board, original_board, player)
+        get_last_board(board, original_board, player, gnome)
         MESSAGE.append("This is the last chamber.")
     else:
         border_color = random.choice(engine.ALL_BORDER_COLORS[:-1])
         fill_color = random.choice(engine.ALL_FILL_COLORS)
-        engine.get_next_board(board, original_board, player, BOARD_WIDTH, BOARD_HEIGHT, border_color, fill_color, doors_color=3, border_width=2)
+        engine.get_next_board(board, original_board, player, gnome, BOARD_WIDTH, BOARD_HEIGHT, border_color, fill_color, doors_color=3, border_width=2)
 
-def get_last_board(board, original_board, player):
+def get_last_board(board, original_board, player, gnome):
     border_color = random.choice(engine.ALL_BORDER_COLORS[:-1])
     fill_color = random.choice(engine.ALL_FILL_COLORS)
     width = BOARD_WIDTH * 3
     height = BOARD_HEIGHT * 2
-    engine.get_last_board(board, original_board, player, width, height, border_color, fill_color, doors_color=3, border_width=4)
+    engine.get_last_board(board, original_board, player,gnome, width, height, border_color, fill_color, doors_color=3, border_width=4)
 
 def save_board(original_board):
     file_to_export = f'boards/board{BOARD_COUNT}.txt'
     data_management.write_board_to_file(file_to_export, original_board)
 
-def get_previous_board(board, BOARD_COUNT, original_board, player, direction, border_width=2):
+def get_previous_board(board, BOARD_COUNT, original_board, player, gnome, direction, border_width=2):
 
 
     if direction =='right' or direction == 'down':
@@ -92,9 +93,19 @@ def get_previous_board(board, BOARD_COUNT, original_board, player, direction, bo
         player["coordinates"]["X"] = BOARD_WIDTH - border_width
         player["coordinates"]["Y"] = BOARD_HEIGHT - border_width * 2
 
+        if GNOME_TRIGGERED:
+            gnome["coordinates"]["X"] = BOARD_WIDTH - border_width - 1
+            gnome["coordinates"]["Y"] = BOARD_HEIGHT - border_width * 2 - 1
+        elif BOARD_COUNT == 1:
+            gnome["coordinates"]["X"] = 25
+            gnome["coordinates"]["Y"] = 5        
+
     elif direction =='right' or direction == 'down':
         player["coordinates"]["X"] = border_width - 1
         player["coordinates"]["Y"] = border_width * 2
+
+        gnome["coordinates"]["X"] = border_width
+        gnome["coordinates"]["Y"] = border_width * 2
     
 def boss_on_board(player, boss, board, original_board):
     if BOARD_COUNT == LAST_BOARD + 1 and boss["health"] > 0:
@@ -140,7 +151,7 @@ def wizard_on_board(player, wizard, board, original_board, spider_one, spider_tw
             MESSAGE.append("Wizard says: Please help us defeat the evil lord!")
             MESSAGE.append("Wizard says: I can give you the key to open his chamber, but please defeat the nearby spiders first.")
         
-        elif combat.is_boss_encounter(player, wizard,):
+        elif combat.is_boss_encounter(player, wizard):
             MESSAGE.append("Wizard says: Thank you for defeating those spiders!")
             if "Wild Lotus" in wizard["items"]:
                 item = [Items.artifacts["Wild Lotus"]]
@@ -149,6 +160,22 @@ def wizard_on_board(player, wizard, board, original_board, spider_one, spider_tw
                 del wizard["items"]["Wild Lotus"]
 
         engine.put_boss_on_board(board, wizard)
+
+def gnome_on_board(player, gnome, board, original_board):
+    global GNOME_TRIGGERED
+    
+    if BOARD_COUNT == 1 and combat.is_boss_encounter(player, gnome):
+        GNOME_TRIGGERED = True
+
+    if BOARD_COUNT == 1 and gnome["health"] > 0 and GNOME_TRIGGERED is False:
+        gnome_direction = random.choice(["up", "left", "right", "down"])
+        engine.move_boss(gnome, gnome_direction, board, original_board)
+        engine.put_boss_on_board(board, gnome)
+        
+    elif gnome["health"] > 0 and GNOME_TRIGGERED is True:
+        gnome_direction = engine.nearest_direction_to_player(gnome, player)
+        engine.move_boss(gnome, gnome_direction, board, original_board)
+        engine.put_boss_on_board(board, gnome)
 
 
 def get_gates(player, wizard, board, original_board, border_width=2):
@@ -227,6 +254,7 @@ def main():
     spider_one = bosses.create_spider(5, 21)
     spider_two = bosses.create_spider(15, 21)
     wizard = npc.create_wizard(5,17)
+    gnome = npc.create_annoying_gnome(5,25)
     board = engine.create_board(BOARD_WIDTH, BOARD_HEIGHT)
     original_board = copy.deepcopy(board)
     save_board(copy.deepcopy(original_board))
@@ -236,6 +264,7 @@ def main():
         player_life = player['Health']
         Items.print_player_life(player_life)
         engine.put_player_on_board(board, player)
+        gnome_on_board(player, gnome, board, original_board)
         if GATES_CLOSED:
             get_gates(player, wizard, board, original_board)
         boss_on_board(player, boss, board, original_board)
@@ -279,22 +308,22 @@ def main():
         elif key == 'a':
             if engine.is_previous_board(player, 'left'):
                 BOARD_COUNT -= 1
-                get_previous_board(board,BOARD_COUNT, original_board, player, 'left', border_width=2)
+                get_previous_board(board,BOARD_COUNT, original_board, player, gnome, 'left', border_width=2)
             engine.move_player(player, 'left', board, original_board, MESSAGE)
 
         elif key == 'w':
             if engine.is_previous_board(player, 'up'):
                 BOARD_COUNT -= 1
-                get_previous_board(board, BOARD_COUNT, original_board, player, 'up', border_width=2)
+                get_previous_board(board, BOARD_COUNT, original_board, player, gnome, 'up', border_width=2)
             engine.move_player(player, 'up', board, original_board, MESSAGE)
 
         elif key == 's':
             if engine.is_board_end(player, 'down', BOARD_WIDTH, BOARD_HEIGHT, BOARD_COUNT, LAST_BOARD):
                 try:
-                    get_previous_board(board, BOARD_COUNT, original_board, player, 'down', border_width=2)
+                    get_previous_board(board, BOARD_COUNT, original_board, player, gnome, 'down', border_width=2)
                     BOARD_COUNT += 1
                 except FileNotFoundError:
-                    get_new_board(board, original_board, player)
+                    get_new_board(board, original_board, player, gnome)
                     BOARD_COUNT += 1
                     save_board(copy.deepcopy(original_board))
             engine.move_player(player, 'down', board, original_board, MESSAGE)
@@ -302,10 +331,10 @@ def main():
         elif key == 'd':
             if engine.is_board_end(player, 'right', BOARD_WIDTH, BOARD_HEIGHT, BOARD_COUNT, LAST_BOARD):
                 try:
-                    get_previous_board(board, BOARD_COUNT, original_board, player, 'right', border_width=2)
+                    get_previous_board(board, BOARD_COUNT, original_board, player, gnome, 'right', border_width=2)
                     BOARD_COUNT += 1
                 except FileNotFoundError:
-                    get_new_board(board, original_board, player)
+                    get_new_board(board, original_board, player, gnome)
                     BOARD_COUNT += 1
                     save_board(copy.deepcopy(original_board))
             engine.move_player(player, 'right', board, original_board, MESSAGE)

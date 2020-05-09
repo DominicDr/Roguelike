@@ -14,3 +14,18 @@ def create_wizard(Y, X):
     }
 
     return wizard
+
+def create_annoying_gnome(Y, X):
+
+    gnome = {
+            'name': 'Annoying gnome',
+            'description': 'A very talkative gnome',
+            'health': 1,
+            'AD': 0,
+            'armour': 0,
+            "coordinates": {"X": X, "Y": Y},
+            "icon":
+    ["@"]
+    }
+
+    return gnome
