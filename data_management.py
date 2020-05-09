@@ -23,3 +23,10 @@ def write_board_to_file(file_name, board):
                 row[i] = str(row[i])
             row = ",".join(row)
             export_file.write(row + "\n")
+
+def get_hint_from_file(file_name="hints.txt"):
+
+    with open(file_name, "r") as file:
+        all_hints = file.read().splitlines()
+
+    return all_hints

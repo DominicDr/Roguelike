@@ -2,7 +2,6 @@ from colorama import Fore, Back, Style
 import time
 import util
 
-
 money = {
     'Silver Coin': {
         'name': 'Silver Coin', 
@@ -323,3 +322,27 @@ def put_empty_chest_on_board(board, chest):
         board[chest_position_Y][chest_position_X] = element
         chest_position_X += 1
 
+def choose_item_to_eat(inventory, player):
+    choosing_food = True
+    while choosing_food:
+        print("Press F to choose a food to eat or press X to back")
+        key = util.key_pressed()
+        if key == 'x':
+            choosing_food = False
+        elif key == 'f':
+            chosen_food = input("Choose a food to eat\n")
+            for element in inventory:
+                if chosen_food == element['name']:
+                    life = element['health']
+                    element['amount'] -= 1
+                    player['Health'] += life
+                    if element['amount'] < 0:
+                        inventory.remove(element)
+                    print(f'You just ate {chosen_food}')
+                    time.sleep(3)
+                    choosing_food = False
+                else:
+                    continue
+        else:
+            print('Wrong key!')
+            continue

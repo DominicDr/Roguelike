@@ -128,7 +128,7 @@ def is_previous_board(player, direction):
     else:
         return False
 
-def get_next_board(board, original_board, player, BOARD_WIDTH, BOARD_HEIGHT, border_color,fill_color, doors_color=3, border_width=2):
+def get_next_board(board, original_board, player, gnome, BOARD_WIDTH, BOARD_HEIGHT, border_color,fill_color, doors_color=3, border_width=2):
 
         next_board = create_board(BOARD_WIDTH, BOARD_HEIGHT, border_color, fill_color, border_width)
 
@@ -140,10 +140,13 @@ def get_next_board(board, original_board, player, BOARD_WIDTH, BOARD_HEIGHT, bor
             player["coordinates"]["X"] = door_placement_X
             player["coordinates"]["Y"] = door_placement_Y
 
+            gnome["coordinates"]["X"] = door_placement_X + 1
+            gnome["coordinates"]["Y"] = door_placement_Y
+
         board[:] = next_board
         original_board[:] = copy.deepcopy(next_board)
 
-def get_last_board(board, original_board, player, BOARD_WIDTH, BOARD_HEIGHT, border_color,fill_color, doors_color=3, border_width=2):
+def get_last_board(board, original_board, player, gnome, BOARD_WIDTH, BOARD_HEIGHT, border_color,fill_color, doors_color=3, border_width=2):
 
     matrix = []
 
@@ -167,6 +170,9 @@ def get_last_board(board, original_board, player, BOARD_WIDTH, BOARD_HEIGHT, bor
 
         player["coordinates"]["X"] = door_placement_X
         player["coordinates"]["Y"] = door_placement_Y
+
+        gnome["coordinates"]["X"] = door_placement_X - 1
+        gnome["coordinates"]["Y"] = door_placement_Y
 
     board[:] = matrix
     original_board[:] = copy.deepcopy(matrix)
