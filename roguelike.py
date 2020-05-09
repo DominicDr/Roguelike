@@ -15,6 +15,7 @@ import mini_games
 import time
 import npc
 
+
 PLAYER_ICON = Fore.RED + Back.BLACK + '▣' + Style.RESET_ALL
 PLAYER_START_X = 3
 PLAYER_START_Y = 3
@@ -206,7 +207,7 @@ def play_game(player, chest, board):
             mini_game_running = True
             while mini_game_running:
                 if game is True: 
-                    Items.add_items_to_inventory(FIRST_CHEST['items'], PLAYER_INVENTORY)
+                    Items.add_items_to_inventory(FIRST_CHEST['items'], PLAYER_INVENTORY, player)
                     Items.put_empty_chest_on_board(board, FIRST_CHEST)
                     FIRST_CHEST.pop('items')
                     util.clear_screen()
@@ -346,6 +347,8 @@ def main():
         
         elif key == 'i':
             Items.display_inventory(PLAYER_INVENTORY)
+            print(player['AD'])
+            print(player['Armour'])
             Items.choose_item_to_eat(PLAYER_INVENTORY, player)
 
         else:
