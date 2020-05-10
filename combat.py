@@ -65,7 +65,12 @@ def boss_dead_icon(boss):
 def boss_combat(player, boss, MESSAGE):
     boss_name = boss["name"]
     player_attack = player["AD"] - boss["armour"]
+    if player_attack < 0:
+        player_attack = 0
     boss_attack = boss["AD"] - player["Armour"]
+    if boss_attack < 0:
+        boss_attack = 0
+
 
     player["Health"] -= boss_attack
     boss["health"] -= player_attack
