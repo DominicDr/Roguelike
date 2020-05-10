@@ -14,6 +14,7 @@ import combat
 import mini_games
 import time
 import npc
+import maps
 
 
 PLAYER_ICON = Fore.RED + Back.BLACK + '▣' + Style.RESET_ALL
@@ -25,6 +26,7 @@ BOARD_HEIGHT = 20
 
 LAST_BOARD = 4
 BOARD_COUNT = 1
+MAP_COUNT = 1
 SPIDER_BOARD = random.randint(BOARD_COUNT + 1, LAST_BOARD-1)
 WIZARD_BOARD = BOARD_COUNT + 1
 GATES_CLOSED = True
@@ -59,13 +61,16 @@ def create_player():
 
 
 def get_new_board(board, original_board, player, gnome):
+    global MAP_COUNT
     if BOARD_COUNT == LAST_BOARD:
         get_last_board(board, original_board, player, gnome)
         MESSAGE.append("This is the last chamber.")
+        MAP_COUNT += 1
     else:
         border_color = random.choice(engine.ALL_BORDER_COLORS[:-1])
         fill_color = random.choice(engine.ALL_FILL_COLORS)
         engine.get_next_board(board, original_board, player, gnome, BOARD_WIDTH, BOARD_HEIGHT, border_color, fill_color, doors_color=3, border_width=2)
+        MAP_COUNT +=1
 
 def get_last_board(board, original_board, player, gnome):
     border_color = random.choice(engine.ALL_BORDER_COLORS[:-1])
@@ -156,7 +161,7 @@ def wizard_on_board(player, wizard, board, original_board, spider_one, spider_tw
             MESSAGE.append("Wizard says: Thank you for defeating those spiders!")
             if "Wild Lotus" in wizard["items"]:
                 item = [Items.artifacts["Wild Lotus"]]
-                Items.add_items_to_inventory(item, PLAYER_INVENTORY)
+                Items.add_items_to_inventory(item, PLAYER_INVENTORY, player)
                 MESSAGE.append("Take this 'Wild Lotus'. It will open the gates to the last chamber.")
                 del wizard["items"]["Wild Lotus"]
 
@@ -350,6 +355,11 @@ def main():
             print(player['AD'])
             print(player['Armour'])
             Items.choose_item_to_eat(PLAYER_INVENTORY, player)
+
+        elif key == 'm':
+            maps.print_map(player, MAP_COUNT, BOARD_COUNT, LAST_BOARD, SPIDER_BOARD, WIZARD_BOARD)
+            print("Press any key to continue")
+            key = util.key_pressed()
 
         else:
             MESSAGE.append("Incorrect input!")
