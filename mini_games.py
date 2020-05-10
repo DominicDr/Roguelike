@@ -3,6 +3,8 @@ import time
 import pyfiglet
 from colorama import Fore, Style
 import util
+import threading
+
 
 paper = """
 
@@ -77,17 +79,16 @@ def time_left():
         print(t)
         time.sleep(1)
         t -= 1
-       
+
 
 def play_game():
     displaying_game()
     game = (paper, scissors, rock)
-    
+    key = util.key_pressed()
+    player_choice = key
     is_running = True
     while is_running:
         print('Choose a digit from 1 to 3!')
-        key = util.key_pressed()
-        player_choice = key
         if player_choice not in ('1', '2', '3'):
             print("Wrong input!")
             continue
