@@ -222,6 +222,9 @@ def choose_item_to_eat(inventory, player):
             for element in inventory:
                 if chosen_food == element['name']:
                     life = element['health']
+                    player['Health'] += life
+                    if player['Health'] > max_health(player):
+                        player['Health'] = max_health(player)
                     element['amount'] -= 1
                     if element['amount'] < 0:
                         inventory.remove(element)
@@ -230,9 +233,6 @@ def choose_item_to_eat(inventory, player):
                     choosing_food = False
                 else:
                     continue
-            player['Health'] += life
-            if player['Health'] > max_health(player):
-                player['Health'] = max_health(player)
         else:
             print('Wrong key!')
             continue
