@@ -38,6 +38,8 @@ PLAYER_INVENTORY = [Items.money['Silver Coin'], Items.foods['Apple'], Items.food
 
 FIRST_CHEST = Items.chest1['Secret chest']
 
+SECOND_CHEST = Items.chest2['Secret chest']
+
 def create_player():
     '''
     Creates a 'player' dictionary for storing all player related informations - i.e. player icon, player position.
@@ -204,7 +206,7 @@ def get_gates(player, wizard, board, original_board, border_width=2):
             GATES_CLOSED = False
 
 
-def play_game(player, chest, board):
+def play_rock_paper_scisorss(player, chest, board):
     if player['coordinates']['X'] - 1 == chest['coordinates']['X'] and player['coordinates']['Y'] == chest['coordinates']['Y']:
         if 'items' in FIRST_CHEST: 
             util.clear_screen()
@@ -215,6 +217,27 @@ def play_game(player, chest, board):
                     Items.add_items_to_inventory(FIRST_CHEST['items'], PLAYER_INVENTORY, player)
                     Items.put_empty_chest_on_board(board, FIRST_CHEST)
                     FIRST_CHEST.pop('items')
+                    util.clear_screen()
+                    mini_game_running = False
+                elif game is False:
+                    player['coordinates']['X'] = 8
+                    player['coordinates']['Y'] = 8
+                    util.clear_screen()
+                    mini_game_running = False
+        else:
+            MESSAGE.append('Chest is empty')  
+
+def guess_a_riddle(player, chest, board):
+    if player['coordinates']['X'] - 1 == chest['coordinates']['X'] and player['coordinates']['Y'] == chest['coordinates']['Y']:
+        if 'items' in SECOND_CHEST: 
+            util.clear_screen()
+            game = mini_games.quess_a_riddle()
+            mini_game_running = True
+            while mini_game_running:
+                if game is True: 
+                    Items.add_items_to_inventory(SECOND_CHEST['items'], PLAYER_INVENTORY, player)
+                    Items.put_empty_chest_on_board(board, SECOND_CHEST)
+                    SECOND_CHEST.pop('items')
                     util.clear_screen()
                     mini_game_running = False
                 elif game is False:
@@ -285,7 +308,13 @@ def main():
 
         if BOARD_COUNT == 1:
             Items.put_full_chest_on_board(board, FIRST_CHEST)
-            play_game(player, chest, board)
+            play_rock_paper_scisorss(player, FIRST_CHEST, board)
+        
+        if BOARD_COUNT == SPIDER_BOARD + 1:
+            Items.put_full_chest_on_board(board, SECOND_CHEST)
+            guess_a_riddle(player, SECOND_CHEST, board)
+            
+
         ui.display_board(board)
         if player_life < 0:
             util.clear_screen()
@@ -352,8 +381,6 @@ def main():
         
         elif key == 'i':
             Items.display_inventory(PLAYER_INVENTORY)
-            print(player['AD'])
-            print(player['Armour'])
             Items.choose_item_to_eat(PLAYER_INVENTORY, player)
 
         elif key == 'm':

@@ -6,7 +6,7 @@ def create_boss():
             'name': 'Demon',
             'description': 'An abomination from outer space',
             'health': 666,
-            'AD': 6,
+            'AD': 90,
             'armour': 6,
             "coordinates": {"X": 40, "Y": 20},
             "icon": 

@@ -84,10 +84,10 @@ def time_left():
 def play_game():
     displaying_game()
     game = (paper, scissors, rock)
-    key = util.key_pressed()
-    player_choice = key
     is_running = True
     while is_running:
+        key = util.key_pressed()
+        player_choice = key
         print('Choose a digit from 1 to 3!')
         if player_choice not in ('1', '2', '3'):
             print("Wrong input!")
@@ -137,4 +137,60 @@ def play_game():
             print('Wrong value!')
             continue
 
+
+riddles = [
+    {'Take off my skin and I won’t cry, but you will, what am I?': 'Onion'},
+    {'I am born of water but when I return to water, I die. What am I?': 'Ice'},
+    {'I am always in front of you but never behind you. What am I?': 'Future'},
+    {'What begins but has no end and is the ending of all that begins?': 'Death'},
+    {'I am always hungry. I must be fed. Whatever I touch will soon turn red. What am I?': 'Fire'},
+    {'I am a container with no sides and no lid, yet golden treasure lays inside. What am I?': 'Egg'},
+    {'You can drop me from the tallest building and I’ll be fine, but if you drop me in fire I die. What am I?': 'Paper'},
+    {'Sometimes I walk in front of you. Sometimes I walk behind you. It is only in the dark that I ever leave you. What am I?': 'Shadow'},
+    {'I get smaller every time I take a bath. What am I?': 'Soap'},
+    {'They come out at night without being called. They are lost in the day without being stolen. What are they?': 'Stars'},
+]
+def get_key(key):
+    for k in key.keys():
+        key = k
+    return key
+
+def get_value(key):
+    for v in key.values():
+        value = v
+    return value
+
+def quess_a_riddle():
+    print(Fore.MAGENTA + """
+        To open chest you have to quess the riddle of Pink Fairy. 
+        She is really smart and tricksy.
+        You have just 3 tries to guess a good answer. 
+        Be careful and good luck!\n\n""" + Style.RESET_ALL)
+    time.sleep(5)
+    riddle = random.choice(riddles)
+    key = get_key(riddle)
+    value = get_value(riddle)
+    tries = 3
+    play_riddle = True
+    while play_riddle:
+        print(key)
+        time.sleep(3)
+        print(f'Tries: {tries}')
+        player_choice = input('Your answer:\n')
+        if player_choice == value:
+            print("Great! You guessed it! Now open chest and check what is inside!")
+            time.sleep(3)
+            play_riddle = False
+            return True
+        elif player_choice != value:
+            tries -= 1
+            if tries > 0:
+                print('That\'s not good answer. Try again!')
+                time.sleep(3)
+                continue
+            elif tries == 0:
+                print('You have no more tries! You lost!')
+                time.sleep(3)
+                play_riddle = False
+                return False
             

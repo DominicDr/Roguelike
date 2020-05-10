@@ -42,7 +42,7 @@ armours = {
     },
     'Platinum Armour': {
         'name': 'Platinum Armour', 
-        'description': 'Divine, almost indestructible platinum plate armour! Only the \'Chosen one\' can put it on',
+        'description': 'Divine, almost indestructible platinum plate armour!',
         'type': 'armour',
         'durability': 75,
         'colour': 'p',
@@ -74,7 +74,7 @@ weapons = {
         'name': 'Silver Dagger',
         'description': 'That\'s the most popular weapon of assassins of kings.',
         'type': 'weapon',
-        'strenght': 50,
+        'strength': 50,
         'colour': 's',
         'sign': 'W',
         'amount': 0,  
@@ -83,16 +83,16 @@ weapons = {
         'name': 'Iron Axe', 
         'description': 'It\'s really sharp tool. Be careful with that and go kill some bastards!',
         'type': 'weapon',
-        'strenght': 60,
+        'strength': 60,
         'colour': 'y',
         'sign': 'W',
         'amount': 0,
     },
     'Emerald Sword': {
         'name': 'Emerald Sword',
-        'description': "If you thought that Excalibur was 'legendary and indestructible sword', you should try this one.", 
+        'description': "Legendary and indestructible sword!", 
         'type': 'weapon',
-        'strenght': 100,
+        'strength': 100,
         'colour': 'p', 
         'sign': 'W',
         'amount': 0,
@@ -322,10 +322,20 @@ chest1 = {
         'description': 'Huge, dusty chest. Would you like to check what is inside?',
         'coordinates': {'X': 10, 'Y': 15, },
         'items': [weapons['Wooden Mace'], armours['Leather Robe']],
-        'icon': [Fore.YELLOW + Back.BLACK + '[' + Style.RESET_ALL, Fore.LIGHTWHITE_EX + Back.BLACK + '?' + Style.RESET_ALL, Fore.YELLOW + Back.BLACK + ']' + Style.RESET_ALL]
+        'icon': [Fore.YELLOW + Back.BLACK + '[' + Style.RESET_ALL, Fore.RED + Back.BLACK + '?' + Style.RESET_ALL, Fore.YELLOW + Back.BLACK + ']' + Style.RESET_ALL]
 
     } 
         
+}
+
+chest2 = {
+    "Secret chest": {
+        "name": 'Secret Chest',
+        'description': 'Huge, dusty chest. Would you like to check what is inside?',
+        'coordinates': {'X': 18, 'Y': 15, },
+        'items': [weapons['Emerald Sword'], armours['Platinum Armour'], foods['Enchanted Glistening Onion']],
+        'icon': [Fore.YELLOW + Back.BLACK + '[' + Style.RESET_ALL, Fore.MAGENTA + Back.BLACK + '?' + Style.RESET_ALL, Fore.YELLOW + Back.BLACK + ']' + Style.RESET_ALL]
+    }
 }
 
 
